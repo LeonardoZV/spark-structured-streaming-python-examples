@@ -41,7 +41,7 @@ aggregated_data = sqlContext.sql("SELECT payload.data.codigo_produto_operacional
             array(
                     struct(lit("specversion").alias("key"), lit("1").cast("binary").alias("value")),
                     struct(lit("type").alias("key"), lit("").cast("binary").alias("value")),
-                    struct(lit("source").alias("key"), lit("urn:sigla:efinanceira-monitoracao-transmissao-spark").cast("binary").alias("value")),
+                    struct(lit("source").alias("key"), lit("urn:sigla:gerar-relatorio-transmissao-job").cast("binary").alias("value")),
                     struct(lit("id").alias("key"), expr("uuid()").cast("binary").alias("value")),
                     struct(lit("time").alias("key"), date_format(current_timestamp(), "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").cast("binary").alias("value")),
                     struct(lit("messageversion").alias("key"), lit("1").cast("binary").alias("value")),

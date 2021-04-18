@@ -1,7 +1,11 @@
 from pyspark.sql import SparkSession
-from pyspark.sql.functions import col, expr, to_date
+from pyspark.sql.functions import udf, col, expr, to_date, lit
 from pyspark.sql.avro.functions import from_avro
+from pyspark.sql.types import BinaryType 
 from confluent_kafka.avro.cached_schema_registry_client import CachedSchemaRegistryClient
+
+def findHeaderValue(array, headerName):
+    return next(x for x in array if x['key'] == headerName)['value']
 
 schema_registry_client = CachedSchemaRegistryClient({
     "url": "https://psrc-4j1d2.westus2.azure.confluent.cloud",
@@ -18,6 +22,10 @@ spark = SparkSession \
     .getOrCreate()
 
 spark.sparkContext.setLogLevel('WARN')
+
+find_header_value = udf(lambda a, b: findHeaderValue(a, b), BinaryType())
+
+spark.udf.register("find_header_value", find_header_value)
 
 raw_data = spark \
     .readStream \
@@ -36,7 +44,7 @@ parsed_data = raw_data \
     .select(col("topic"),
             col("partition"),
             col("offset"),
-            col("headers")[0]["value"].cast("string").alias("specversion"),
+            find_header_value(col("headers"), lit("specversion")).cast("string").alias("specversion"),
             col("headers")[1]["value"].cast("string").alias("type"),
             col("headers")[2]["value"].cast("string").alias("source"),
             col("headers")[3]["value"].cast("string").alias("id"),
@@ -55,16 +63,16 @@ parsed_data.printSchema()
 
 query = parsed_data \
     .writeStream \
-    .format("console") \
-    .outputMode("update") \
-    .option("truncate", False) \
+    .partitionBy("date") \
+    .format("parquet") \
+    .outputMode("append") \
+    .option("path","D:\\s3\\bkt-raw-data\\data") \
     .option("checkpointLocation", "D:\\s3\\bkt-raw-data\\checkpoint") \
     .trigger(once=True) \
     .start()
 
 query.awaitTermination()
 
-    # .partitionBy("date") \
-    # .format("parquet") \
-    # .outputMode("append") \
-    # .option("path","D:\\s3\\bkt-raw-data\\data") \
+    # .format("console") \
+    # .outputMode("update") \
+    # .option("truncate", False) \
