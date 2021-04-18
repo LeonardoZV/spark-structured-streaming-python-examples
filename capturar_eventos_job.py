@@ -2,7 +2,6 @@ from pyspark.sql import SparkSession
 from pyspark.sql.functions import col, expr, to_date
 from pyspark.sql.avro.functions import from_avro
 from confluent_kafka.avro.cached_schema_registry_client import CachedSchemaRegistryClient
-from avro import schema
 
 schema_registry_client = CachedSchemaRegistryClient({
     "url": "https://psrc-4j1d2.westus2.azure.confluent.cloud",
@@ -58,7 +57,7 @@ query = parsed_data \
     .writeStream \
     .format("console") \
     .outputMode("update") \
-    .option("truncate", True) \
+    .option("truncate", False) \
     .option("checkpointLocation", "D:\\s3\\bkt-raw-data\\checkpoint") \
     .trigger(once=True) \
     .start()
