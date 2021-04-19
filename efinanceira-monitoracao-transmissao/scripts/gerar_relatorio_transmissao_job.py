@@ -37,18 +37,18 @@ raw_data.createOrReplaceTempView("evento")
 aggregated_data = sqlContext.sql("SELECT payload.data.codigo_produto_operacional, COUNT(*) as quantidade_eventos_transmitidos, COUNT(case when payload.data.codigo_empresa = 341 then 1 else null end) as quantidade_eventos_transmitidos_sucesso, COUNT(case when payload.data.codigo_empresa = 350 then 1 else null end) as quantidade_eventos_transmitidos_erro FROM evento GROUP BY payload.data.codigo_produto_operacional") \
     .withColumn("data",	struct("*")) \
     .withColumn("value", concat(lit(magic_byte), lit(id_bytes), to_avro(struct("data"), str(latest_schema)))) \
-    .withColumn("headers ", 
-            array(
-                    struct(lit("specversion").alias("key"), lit("1").cast("binary").alias("value")),
-                    struct(lit("type").alias("key"), lit("").cast("binary").alias("value")),
-                    struct(lit("source").alias("key"), lit("urn:sigla:gerar-relatorio-transmissao-job").cast("binary").alias("value")),
-                    struct(lit("id").alias("key"), expr("uuid()").cast("binary").alias("value")),
-                    struct(lit("time").alias("key"), date_format(current_timestamp(), "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").cast("binary").alias("value")),
-                    struct(lit("messageversion").alias("key"), lit("1").cast("binary").alias("value")),
-                    struct(lit("transactionid").alias("key"), lit("").cast("binary").alias("value")),
-                    struct(lit("correlationid").alias("key"), lit("").cast("binary").alias("value")),
-                    struct(lit("datacontenttype").alias("key"), lit("application/avro").cast("binary").alias("value"))
-            )
+    .withColumn("headers ",
+        array(
+            struct(lit("specversion").alias("key"), lit("1").cast("binary").alias("value")),
+            struct(lit("type").alias("key"), lit("").cast("binary").alias("value")),
+            struct(lit("source").alias("key"), lit("urn:sigla:gerar-relatorio-transmissao-job").cast("binary").alias("value")),
+            struct(lit("id").alias("key"), expr("uuid()").cast("binary").alias("value")),
+            struct(lit("time").alias("key"), date_format(current_timestamp(), "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").cast("binary").alias("value")),
+            struct(lit("messageversion").alias("key"), lit("1").cast("binary").alias("value")),
+            struct(lit("transactionid").alias("key"), lit("").cast("binary").alias("value")),
+            struct(lit("correlationid").alias("key"), lit("").cast("binary").alias("value")),
+            struct(lit("datacontenttype").alias("key"), lit("application/avro").cast("binary").alias("value"))
+        )
     )
 
 aggregated_data.printSchema()
