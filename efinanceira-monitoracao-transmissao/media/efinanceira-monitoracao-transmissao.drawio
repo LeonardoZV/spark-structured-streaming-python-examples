@@ -1,1 +1,53 @@
-<mxfile host="app.diagrams.net" modified="2021-04-19T04:37:28.604Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.72 Safari/537.36" version="14.6.1" etag="iXeq1PhiYiaJwIOKuPSk" type="github"><diagram id="4bmlQa7JupVP9dmJylS3">UzV2zq1wL0osyPDNT0nNUTV2VTV2LsrPL4GwciucU3NyVI0MMlNUjV1UjYwMgFjVyA2HrCFY1qAgsSg1rwSLBiADYTaQg2Y1AA==</diagram></mxfile>
+<mxfile host="app.diagrams.net" modified="2021-04-19T04:54:39.516Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.72 Safari/537.36" etag="pkl-3zd0faSBmr-yUR6I" version="14.6.1" type="github">
+  <diagram id="4bmlQa7JupVP9dmJylS3" name="Page-1">
+    <mxGraphModel dx="1681" dy="641" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="4s7Es78IpS1MlxOsi2r0-8" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="4s7Es78IpS1MlxOsi2r0-1" target="4s7Es78IpS1MlxOsi2r0-7">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="4s7Es78IpS1MlxOsi2r0-1" value="&lt;b&gt;Spark Structured Streaming&lt;br&gt;&lt;/b&gt;CapturarEventosJob" style="pointerEvents=1;shadow=0;dashed=0;html=1;strokeColor=none;fillColor=#505050;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;outlineConnect=0;align=center;shape=mxgraph.office.concepts.script;" vertex="1" parent="1">
+          <mxGeometry x="217" y="324.5" width="53" height="49" as="geometry" />
+        </mxCell>
+        <mxCell id="4s7Es78IpS1MlxOsi2r0-3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="4s7Es78IpS1MlxOsi2r0-2" target="4s7Es78IpS1MlxOsi2r0-1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="4s7Es78IpS1MlxOsi2r0-2" value="&lt;b&gt;Apache Kafka&lt;br&gt;&lt;/b&gt;Tópico Evento Transmitido" style="outlineConnect=0;fontColor=#232F3E;gradientColor=none;strokeColor=#232F3E;fillColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.topic;" vertex="1" parent="1">
+          <mxGeometry x="47" y="319" width="60" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="4s7Es78IpS1MlxOsi2r0-6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="4s7Es78IpS1MlxOsi2r0-4" target="4s7Es78IpS1MlxOsi2r0-5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="4s7Es78IpS1MlxOsi2r0-4" value="&lt;b&gt;Spark Structured Streaming&lt;br&gt;&lt;/b&gt;GerarRelatorioTransmissaoJob" style="pointerEvents=1;shadow=0;dashed=0;html=1;strokeColor=none;fillColor=#505050;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;outlineConnect=0;align=center;shape=mxgraph.office.concepts.script;" vertex="1" parent="1">
+          <mxGeometry x="520" y="324.5" width="53" height="49" as="geometry" />
+        </mxCell>
+        <mxCell id="4s7Es78IpS1MlxOsi2r0-5" value="&lt;b&gt;Apache Kafka&lt;br&gt;&lt;/b&gt;Tópico Relatório Transmissao" style="outlineConnect=0;fontColor=#232F3E;gradientColor=none;strokeColor=#232F3E;fillColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.topic;" vertex="1" parent="1">
+          <mxGeometry x="713" y="319" width="60" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="4s7Es78IpS1MlxOsi2r0-9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="4s7Es78IpS1MlxOsi2r0-7" target="4s7Es78IpS1MlxOsi2r0-4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="4s7Es78IpS1MlxOsi2r0-11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="4s7Es78IpS1MlxOsi2r0-7">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="391" y="270" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="4s7Es78IpS1MlxOsi2r0-7" value="&lt;b&gt;AWS S3&lt;br&gt;&lt;/b&gt;Bucket Staging&amp;nbsp;" style="points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];outlineConnect=0;fontColor=#232F3E;gradientColor=#60A337;gradientDirection=north;fillColor=#277116;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.s3;" vertex="1" parent="1">
+          <mxGeometry x="357" y="315" width="68" height="68" as="geometry" />
+        </mxCell>
+        <mxCell id="4s7Es78IpS1MlxOsi2r0-13" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="4s7Es78IpS1MlxOsi2r0-10">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="391" y="140" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="4s7Es78IpS1MlxOsi2r0-10" value="&lt;b&gt;Spark Structured Streaming&lt;br&gt;&lt;/b&gt;ConsolidarBaseEventosJob" style="pointerEvents=1;shadow=0;dashed=0;html=1;strokeColor=none;fillColor=#505050;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;outlineConnect=0;align=center;shape=mxgraph.office.concepts.script;" vertex="1" parent="1">
+          <mxGeometry x="364.5" y="180" width="53" height="49" as="geometry" />
+        </mxCell>
+        <mxCell id="4s7Es78IpS1MlxOsi2r0-12" value="&lt;b&gt;AWS S3&lt;br&gt;&lt;/b&gt;Bucket Raw" style="points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];outlineConnect=0;fontColor=#232F3E;gradientColor=#60A337;gradientDirection=north;fillColor=#277116;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.s3;" vertex="1" parent="1">
+          <mxGeometry x="357" y="30" width="68" height="68" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
