@@ -1,5 +1,5 @@
 # Spark Streaming Kafka Python Exemplos
-Exemplos de consumo e produção de eventos no Kafka (+ Schema Registry) utilizando Spark Streaming
+Exemplos de consumo e produção de eventos no Kafka (+ Schema Registry) utilizando Spark Streaming.
 
 ## eFinanceira Monitoração Transmissão
 
