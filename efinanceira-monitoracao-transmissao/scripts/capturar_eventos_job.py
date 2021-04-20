@@ -4,7 +4,8 @@ from pyspark.sql.avro.functions import from_avro
 from pyspark.sql.types import BinaryType 
 from confluent_kafka.avro.cached_schema_registry_client import CachedSchemaRegistryClient
 
-def findHeaderValue(array, headerName):
+@udf(BinaryType())
+def find_header_value(array, headerName):
     return next(x for x in array if x['key'] == headerName)['value']
 
 schema_registry_client = CachedSchemaRegistryClient({
@@ -22,8 +23,6 @@ spark = SparkSession \
     .getOrCreate()
 
 spark.sparkContext.setLogLevel('WARN')
-
-find_header_value = udf(lambda a, b: findHeaderValue(a, b), BinaryType())
 
 spark.udf.register("find_header_value", find_header_value)
 
