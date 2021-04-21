@@ -25,14 +25,14 @@ sqlContext = SQLContext(spark.sparkContext)
 
 spark.sparkContext.setLogLevel('WARN')
 
-raw_data = spark \
+staging_data = spark \
     .readStream \
     .format("parquet") \
-    .schema(spark.read.parquet("D:\\s3\\bkt-raw-data\\data").schema) \
-    .option("path", "D:\\s3\\bkt-raw-data\\data") \
+    .schema(spark.read.parquet("D:\\s3\\bkt-staging-data").schema) \
+    .option("path", "D:\\s3\\bkt-staging-data") \
     .load()
 
-raw_data.createOrReplaceTempView("evento")
+staging_data.createOrReplaceTempView("evento")
 
 aggregated_data = sqlContext.sql("SELECT payload.data.codigo_produto_operacional, COUNT(*) as quantidade_eventos_transmitidos, COUNT(case when payload.data.codigo_empresa = 341 then 1 else null end) as quantidade_eventos_transmitidos_sucesso, COUNT(case when payload.data.codigo_empresa = 350 then 1 else null end) as quantidade_eventos_transmitidos_erro FROM evento GROUP BY payload.data.codigo_produto_operacional") \
     .withColumn("data",	struct("*")) \
@@ -58,7 +58,7 @@ query = aggregated_data \
     .format("console") \
     .outputMode("update") \
     .option("truncate", False) \
-    .option("checkpointLocation", "D:\\s3\\bkt-agg-data\\checkpoint") \
+    .option("checkpointLocation", "D:\\s3\\bkt-checkpoint-data\\gerar-relatorio-transmissao-job") \
     .trigger(once=True) \
     .start()
 

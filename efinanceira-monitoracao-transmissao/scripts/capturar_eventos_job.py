@@ -1,5 +1,5 @@
 from pyspark.sql import SparkSession
-from pyspark.sql.functions import udf, col, expr, to_date, lit
+from pyspark.sql.functions import udf, pandas_udf, PandasUDFType, col, expr, to_date, lit
 from pyspark.sql.avro.functions import from_avro
 from pyspark.sql.types import BinaryType 
 from confluent_kafka.avro.cached_schema_registry_client import CachedSchemaRegistryClient
@@ -65,12 +65,11 @@ query = parsed_data \
     .partitionBy("date") \
     .format("parquet") \
     .outputMode("append") \
-    .option("path","D:\\s3\\bkt-raw-data\\data") \
-    .option("checkpointLocation", "D:\\s3\\bkt-raw-data\\checkpoint") \
+    .option("path","D:\\s3\\bkt-staging-data") \
+    .option("checkpointLocation", "D:\\s3\\bkt-checkpoint-data\\capturar-eventos-job") \
     .trigger(once=True) \
-    .start()
-
-query.awaitTermination()
+    .start() \
+    .awaitTermination()
 
     # .format("console") \
     # .outputMode("update") \
