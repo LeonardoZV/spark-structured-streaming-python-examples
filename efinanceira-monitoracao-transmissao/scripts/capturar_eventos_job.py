@@ -37,9 +37,7 @@ raw_data = spark \
     .option("subscribe", "processamento-ted") \
     .option("startingOffsets", "earliest") \
     .option("includeHeaders", "true") \
-    .load()
-
-parsed_data = raw_data \
+    .load() \
     .select(col("topic"),
             col("partition"),
             col("offset"),
@@ -56,11 +54,7 @@ parsed_data = raw_data \
             from_avro(expr("substring(value, 6)"), str(latest_schema)).alias("payload")) \
     .withColumn("date", to_date(col("time"))) \
     .withWatermark("time", "2 minutes") \
-    .dropDuplicates(subset=['id'])
-
-parsed_data.printSchema()
-
-query = parsed_data \
+    .dropDuplicates(subset=['id']) \
     .writeStream \
     .partitionBy("date") \
     .format("parquet") \

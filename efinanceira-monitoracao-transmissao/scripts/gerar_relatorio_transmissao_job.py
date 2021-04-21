@@ -49,20 +49,15 @@ aggregated_data = sqlContext.sql("SELECT payload.data.codigo_produto_operacional
             struct(lit("correlationid").alias("key"), lit("").cast("binary").alias("value")),
             struct(lit("datacontenttype").alias("key"), lit("application/avro").cast("binary").alias("value"))
         )
-    )
-
-aggregated_data.printSchema()
-
-query = aggregated_data \
+    ) \
     .writeStream \
     .format("console") \
     .outputMode("update") \
     .option("truncate", False) \
     .option("checkpointLocation", "D:\\s3\\bkt-checkpoint-data\\gerar-relatorio-transmissao-job") \
     .trigger(once=True) \
-    .start()
-
-query.awaitTermination()
+    .start() \
+    .awaitTermination()
 
     # .format("kafka") \
     # .outputMode("update") \
