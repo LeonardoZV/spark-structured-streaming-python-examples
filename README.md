@@ -7,7 +7,7 @@ Este exemplo demonstra como utilizar o Kafka como origem para popular, de forma 
 ![efinanceira-monitoracao-transmissao](efinanceira-monitoracao-transmissao/media/efinanceira-monitoracao-transmissao.png)
 
 1. **CapturarEventosJob:** Consome eventos e os armazenada em formato parquet em um bucket de staging. Por se tratar de consumo de streamig, será gerado um arquivo parquet para cada consumidor/partição e micro batch.
-2. **ConsolidarBaseEventosJob:** Consome os vários arquivos em formato parquet, os consolida na maneira que faça mais sentido para otimizar a consulta, neste caso por AAAA-MM-DD, armazenando o resultado em um bucket raw.
+2. **ConsolidarBaseEventosJob:** Consome os vários arquivos em formato parquet, os consolida na maneira que faça mais sentido para otimizar a consulta, armazenando o resultado em um bucket raw.
 3. **GerarRelatorioTransmissaoJob:** Consome os vários arquivos em formato parquet, os agrega conforme necessário pelo relatório e realiza a postagem no kafka.
 
 **Requisitos:**
