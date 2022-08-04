@@ -23,12 +23,12 @@ This example demonstrates how to use Kafka as a source to simultaneously populat
 
 3. **GerarRelatorioTransmissaoJob:** It consumes the files in the Source of Record bucket, aggregates them as needed by the report and performs the posting to kafka.
 
-**Requisitos:**
+### Requisites:
 ```
 pip install -r requirements.txt 
 ```
 
-**Executando:**
+### Starting:
 ```
 <path_spark>\bin\spark-submit --packages org.apache.spark:spark-core_2.12:3.1.1,org.apache.spark:spark-sql_2.12:3.1.1,org.apache.spark:spark-sql-kafka-0-10_2.12:3.1.1,org.apache.spark:spark-avro_2.12:3.1.1 <path_script>\capturar_eventos_job.py
 <path_spark>\bin\spark-submit --packages org.apache.spark:spark-core_2.12:3.1.1,org.apache.spark:spark-sql_2.12:3.1.1,org.apache.spark:spark-sql-kafka-0-10_2.12:3.1.1,org.apache.spark:spark-avro_2.12:3.1.1 <path_script>\consolidar_base_eventos_job.py
