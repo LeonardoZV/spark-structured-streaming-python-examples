@@ -1,14 +1,27 @@
-# Spark Streaming Kafka Python Exemplos
-Exemplos de consumo e produção de eventos no Kafka (+ Schema Registry) utilizando Spark Streaming.
+# Spark Streaming Kafka Python Exemples
+Examples of consuming and producing events in Kafka (+ Schema Registry) using Spark Streaming.
 
-## e-Financeira Monitoração Transmissão
-Este exemplo demonstra como utilizar o Kafka como origem para popular, de forma simultânea, um lake de dados e gerar relatórios agregados em near real time.
+## e-Financeira Transmission Monitoring Tool
+
+### What is it?
+e-Financeira is a accessory obligation that banks in Brazil have to report to Receita Federal do Brasil, the Brazilian federal revenue service.
+
+### What we need to do?
+Users need two things:
+
+1. View events that were transmitted to RFB with success or error, in detail.
+2. View a aggregated report with the sum of events categorized by success or error by company.
+
+### Architecture
+This example demonstrates how to use Kafka as a source to simultaneously populate a data lake and generate a aggregated report in near real time.
 
 ![efinanceira-monitoracao-transmissao](efinanceira-monitoracao-transmissao/media/efinanceira-monitoracao-transmissao.png)
 
-1. **CapturarEventosJob:** Consome eventos e os armazenada em formato parquet em um bucket de staging. Por se tratar de consumo de streamig, será gerado um arquivo parquet para cada consumidor/partição e micro batch.
-2. **ConsolidarBaseEventosJob:** Consome os vários arquivos em formato parquet, os consolida na maneira que faça mais sentido para otimizar a consulta, armazenando o resultado em um bucket raw.
-3. **GerarRelatorioTransmissaoJob:** Consome os vários arquivos em formato parquet, os agrega conforme necessário pelo relatório e realiza a postagem no kafka.
+1. **CapturarEventosJob:** Consumes events and stores them in parquet format in a Source of Record bucket. Because it is a streamig consumption, a parquet file will be generated for each consumer/partition and micro batch.
+
+2. **ConsolidarBaseEventosJob:** It consumes the files in the Source of Record bucket, consolidates them in a way that makes the most sense to optimize the queries and stores the result in a Source of Truth bucket.
+
+3. **GerarRelatorioTransmissaoJob:** It consumes the files in the Source of Record bucket, aggregates them as needed by the report and performs the posting to kafka.
 
 **Requisitos:**
 ```
