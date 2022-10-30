@@ -1,7 +1,7 @@
-from pyspark.sql import SparkSession, Window, functions as f
+from pyspark.sql import SparkSession, Window
 from pyspark.sql.types import StructType, StructField, StringType, TimestampType
-from pyspark.sql.functions import col, asc, desc
-from delta.tables import *
+from pyspark.sql.functions import col, desc, row_number
+from delta.tables import DeltaTable
 
 job_name = "usuarios-merge-job"
 delta_table_name = "`teste_db`.`usuario_delta`"
@@ -16,39 +16,41 @@ spark = SparkSession.builder.appName(job_name) \
 
 spark.sql("CREATE TABLE IF NOT EXISTS " + delta_table_name + " (codigo_usuario STRING, nome_usuario STRING) USING DELTA")
 
-window = Window.partitionBy("codigo_usuario").orderBy(desc("data_hora_evento"))
-
-deltaTable = DeltaTable.forName(spark, delta_table_name)
-
-def upsertToDelta(microBatchOutputDF, batchId):
-    microBatchOutputDF = microBatchOutputDF.withColumn("row", functions.row_number().over(window)) \
-        .filter(col("row") == 1) \
-        .drop("row")
-
-    deltaTable.alias("t").merge(microBatchOutputDF.alias("s"), "s.codigo_usuario = t.codigo_usuario") \
-        .whenMatchedUpdateAll() \
-        .whenNotMatchedInsertAll() \
-        .execute()
-
+spark.sql("ALTER TABLE " + delta_table_name + " SET TBLPROPERTIES(delta.compatibility.symlinkFormatManifest.enabled=true)")
 
 schema = StructType([
+    StructField("id", StringType()),
     StructField("data_hora_evento", TimestampType()),
     StructField("codigo_usuario", StringType()),
     StructField("nome_usuario", StringType())]
 )
 
+window = Window.partitionBy("codigo_usuario").orderBy(desc("data_hora_evento"))
+
+deltaTable = DeltaTable.forName(spark, delta_table_name)
+
+
+def upsert_to_delta(source, batch_id):
+    deltaTable.alias("t").merge(source.alias("s"), "s.codigo_usuario = t.codigo_usuario") \
+        .whenMatchedUpdateAll() \
+        .whenNotMatchedInsertAll() \
+        .execute()
+
+
 spark.readStream.format("json") \
     .schema(schema) \
     .load("s3://aws-emr-assets-428204489288-us-east-1/samples/") \
+    .dropDuplicates(subset=["id"]) \
+    .withColumn("row", row_number().over(window)) \
+    .filter(col("row") == 1) \
+    .drop("row") \
     .writeStream.format("delta") \
-    .foreachBatch(upsertToDelta) \
+    .foreachBatch(upsert_to_delta) \
     .outputMode("append") \
     .option("checkpointLocation", "s3://aws-emr-assets-428204489288-us-east-1/checkpoints/" + job_name + "/") \
     .trigger(once=True) \
     .start() \
     .awaitTermination()
-
-spark.sql("GENERATE symlink_format_manifest FOR TABLE " + delta_table_name)
 
 spark.sql("CREATE EXTERNAL TABLE IF NOT EXISTS " + table_name + " (codigo_usuario STRING, nome_usuario STRING) \
 ROW FORMAT SERDE 'org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe' \

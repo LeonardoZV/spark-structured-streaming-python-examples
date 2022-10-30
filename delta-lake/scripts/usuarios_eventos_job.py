@@ -12,9 +12,12 @@ spark = SparkSession.builder.appName(job_name) \
     .enableHiveSupport() \
     .getOrCreate()
 
-spark.sql("CREATE TABLE IF NOT EXISTS " + delta_table_name + " (data_hora_evento TIMESTAMP, codigo_usuario STRING, nome_usuario STRING) USING DELTA")
+spark.sql("CREATE TABLE IF NOT EXISTS " + delta_table_name + " (id STRING, data_hora_evento TIMESTAMP, codigo_usuario STRING, nome_usuario STRING) USING DELTA")
+
+spark.sql("ALTER TABLE " + delta_table_name + " SET TBLPROPERTIES(delta.compatibility.symlinkFormatManifest.enabled=true)")
 
 schema = StructType([
+    StructField("id", StringType()),
     StructField("data_hora_evento", TimestampType()),
     StructField("codigo_usuario", StringType()),
     StructField("nome_usuario", StringType())]
@@ -23,6 +26,7 @@ schema = StructType([
 spark.readStream.format("json") \
     .schema(schema) \
     .load("s3://aws-emr-assets-428204489288-us-east-1/samples/") \
+    .dropDuplicates(subset=["id"]) \
     .writeStream.format("delta") \
     .outputMode("append") \
     .option("checkpointLocation", "s3://aws-emr-assets-428204489288-us-east-1/checkpoints/" + job_name + "/") \
@@ -30,9 +34,7 @@ spark.readStream.format("json") \
     .toTable(delta_table_name) \
     .awaitTermination()
 
-spark.sql("GENERATE symlink_format_manifest FOR TABLE " + delta_table_name)
-
-spark.sql("CREATE EXTERNAL TABLE IF NOT EXISTS " + table_name + " (data_hora_evento TIMESTAMP, codigo_usuario STRING, nome_usuario STRING) \
+spark.sql("CREATE EXTERNAL TABLE IF NOT EXISTS " + table_name + " (id STRING, data_hora_evento TIMESTAMP, codigo_usuario STRING, nome_usuario STRING) \
 ROW FORMAT SERDE 'org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe' \
 STORED AS INPUTFORMAT 'org.apache.hadoop.hive.ql.io.SymlinkTextInputFormat' \
 OUTPUTFORMAT 'org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat' \
