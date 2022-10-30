@@ -28,13 +28,13 @@ spark.sparkContext.setLogLevel('WARN')
 staging_data = spark \
     .readStream \
     .format("parquet") \
-    .schema(spark.read.parquet("D:\\s3\\bkt-staging-data").schema) \
-    .option("path", "D:\\s3\\bkt-staging-data") \
+    .schema(spark.read.parquet("D:\\s3\\efinanceira-monitoracao-transmissao\\bkt-staging-data").schema) \
+    .option("path", "D:\\s3\\efinanceira-monitoracao-transmissao\\bkt-staging-data") \
     .load()
 
 staging_data.createOrReplaceTempView("evento")
 
-aggregated_data = sqlContext.sql("SELECT payload.data.codigo_produto_operacional, COUNT(*) as quantidade_eventos_transmitidos, COUNT(case when payload.data.codigo_empresa = 341 then 1 else null end) as quantidade_eventos_transmitidos_sucesso, COUNT(case when payload.data.codigo_empresa = 350 then 1 else null end) as quantidade_eventos_transmitidos_erro FROM evento GROUP BY payload.data.codigo_produto_operacional") \
+sqlContext.sql("SELECT payload.data.codigo_produto_operacional, COUNT(*) as quantidade_eventos_transmitidos, COUNT(case when payload.data.codigo_empresa = 341 then 1 else null end) as quantidade_eventos_transmitidos_sucesso, COUNT(case when payload.data.codigo_empresa = 350 then 1 else null end) as quantidade_eventos_transmitidos_erro FROM evento GROUP BY payload.data.codigo_produto_operacional") \
     .withColumn("data",	struct("*")) \
     .withColumn("value", concat(lit(magic_byte), lit(id_bytes), to_avro(struct("data"), str(latest_schema)))) \
     .withColumn("headers ",
@@ -54,7 +54,7 @@ aggregated_data = sqlContext.sql("SELECT payload.data.codigo_produto_operacional
     .format("console") \
     .outputMode("update") \
     .option("truncate", False) \
-    .option("checkpointLocation", "D:\\s3\\bkt-checkpoint-data\\gerar-relatorio-transmissao-job") \
+    .option("checkpointLocation", "D:\\s3\\efinanceira-monitoracao-transmissao\\bkt-checkpoint-data\\gerar-relatorio-transmissao-job") \
     .trigger(once=True) \
     .start() \
     .awaitTermination()

@@ -8,22 +8,19 @@ spark = SparkSession \
     .master("local[*]") \
     .getOrCreate()
 
-sqlContext = SQLContext(spark.sparkContext)
-
 spark.sparkContext.setLogLevel('WARN')
 
-staging_data = spark \
-    .readStream \
+spark.readStream \
     .format("parquet") \
-    .schema(spark.read.parquet("D:\\s3\\bkt-staging-data").schema) \
-    .option("path", "D:\\s3\\bkt-staging-data") \
+    .schema(spark.read.parquet("D:\\s3\\efinanceira-monitoracao-transmissao\\bkt-staging-data").schema) \
+    .option("path", "D:\\s3\\efinanceira-monitoracao-transmissao\\bkt-staging-data") \
     .load() \
     .writeStream \
     .partitionBy("date") \
     .format("parquet") \
     .outputMode("append") \
-    .option("path","D:\\s3\\bkt-raw-data") \
-    .option("checkpointLocation", "D:\\s3\\bkt-checkpoint-data\\consolidar-base-eventos-job") \
+    .option("path", "D:\\s3\\efinanceira-monitoracao-transmissao\\bkt-raw-data") \
+    .option("checkpointLocation", "D:\\s3\\efinanceira-monitoracao-transmissao\\bkt-checkpoint-data\\consolidar-base-eventos-job") \
     .trigger(once=True) \
     .start() \
     .awaitTermination()

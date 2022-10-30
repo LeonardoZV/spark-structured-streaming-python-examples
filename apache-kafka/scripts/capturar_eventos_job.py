@@ -26,8 +26,7 @@ spark.sparkContext.setLogLevel('WARN')
 
 spark.udf.register("find_header_value", find_header_value)
 
-raw_data = spark \
-    .readStream \
+spark.readStream \
     .format("kafka") \
     .option("kafka.bootstrap.servers", "pkc-epwny.eastus.azure.confluent.cloud:9092") \
     .option("kafka.security.protocol", "SASL_SSL") \
@@ -53,13 +52,12 @@ raw_data = spark \
             col("headers")[9]["value"].cast("string").alias("datacontenttype"),
             from_avro(expr("substring(value, 6)"), str(latest_schema)).alias("payload")) \
     .withColumn("date", to_date(col("time"))) \
-    .withWatermark("time", "2 minutes") \
     .dropDuplicates(subset=['id']) \
     .writeStream \
     .partitionBy("date") \
     .format("parquet") \
     .outputMode("append") \
-    .option("path","D:\\s3\\bkt-staging-data") \
+    .option("path", "D:\\s3\\bkt-staging-data") \
     .option("checkpointLocation", "D:\\s3\\bkt-checkpoint-data\\capturar-eventos-job") \
     .trigger(once=True) \
     .start() \
