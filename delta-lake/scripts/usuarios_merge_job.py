@@ -14,9 +14,7 @@ spark = SparkSession.builder.appName(job_name) \
     .enableHiveSupport() \
     .getOrCreate()
 
-spark.sql("CREATE TABLE IF NOT EXISTS " + delta_table_name + " (codigo_usuario STRING, nome_usuario STRING) USING DELTA")
-
-spark.sql("ALTER TABLE " + delta_table_name + " SET TBLPROPERTIES(delta.compatibility.symlinkFormatManifest.enabled=true)")
+spark.sql("CREATE TABLE IF NOT EXISTS " + delta_table_name + " (codigo_usuario STRING, nome_usuario STRING) USING delta TBLPROPERTIES(delta.compatibility.symlinkFormatManifest.enabled=true)")
 
 schema = StructType([
     StructField("id", StringType()),
@@ -34,7 +32,6 @@ def upsert_to_delta(source, batch_id):
     source = source.withColumn("row", row_number().over(window)) \
         .filter(col("row") == 1) \
         .drop("row")
-
     deltaTable.alias("t").merge(source.alias("s"), "s.codigo_usuario = t.codigo_usuario") \
         .whenMatchedUpdateAll() \
         .whenNotMatchedInsertAll() \

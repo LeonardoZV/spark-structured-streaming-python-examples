@@ -12,9 +12,7 @@ spark = SparkSession.builder.appName(job_name) \
     .enableHiveSupport() \
     .getOrCreate()
 
-spark.sql("CREATE TABLE IF NOT EXISTS " + delta_table_name + " (id STRING, data_hora_evento TIMESTAMP, codigo_usuario STRING, nome_usuario STRING) USING DELTA")
-
-spark.sql("ALTER TABLE " + delta_table_name + " SET TBLPROPERTIES(delta.compatibility.symlinkFormatManifest.enabled=true)")
+spark.sql("CREATE TABLE IF NOT EXISTS " + delta_table_name + " (id STRING, data_hora_evento TIMESTAMP, codigo_usuario STRING, nome_usuario STRING) USING delta TBLPROPERTIES(delta.compatibility.symlinkFormatManifest.enabled=true)")
 
 schema = StructType([
     StructField("id", StringType()),
