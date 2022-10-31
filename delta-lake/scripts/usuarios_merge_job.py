@@ -31,6 +31,10 @@ deltaTable = DeltaTable.forName(spark, delta_table_name)
 
 
 def upsert_to_delta(source, batch_id):
+    source = source.withColumn("row", row_number().over(window)) \
+        .filter(col("row") == 1) \
+        .drop("row")
+
     deltaTable.alias("t").merge(source.alias("s"), "s.codigo_usuario = t.codigo_usuario") \
         .whenMatchedUpdateAll() \
         .whenNotMatchedInsertAll() \
@@ -41,9 +45,6 @@ spark.readStream.format("json") \
     .schema(schema) \
     .load("s3://aws-emr-assets-428204489288-us-east-1/samples/") \
     .dropDuplicates(subset=["id"]) \
-    .withColumn("row", row_number().over(window)) \
-    .filter(col("row") == 1) \
-    .drop("row") \
     .writeStream.format("delta") \
     .foreachBatch(upsert_to_delta) \
     .outputMode("append") \
